@@ -1,0 +1,21 @@
+Random range = 150
+start = 1
+goal = 2
+emptySpace = 3-27
+pathwayRoom = 28-90
+treasureRoom = 91-110
+combatRoom = 111-150
+
+TO DO
+modify getMap() if-else to use a function for it's node function calls.
+
+A* failstate: I
+
+DOCUMENT DEETS:
+I used Command design pattern.
+I used Builder design pattern.
+
+I will use Chain of Responsibility for loading files.
+I will use Strategy design pattern for switching sorting algorithms.
+
+X and Y are switched when building the maps
