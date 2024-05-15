@@ -1,6 +1,7 @@
 package org.example.builders;
 
 import org.example.interfaces.ICommand;
+import org.example.interfaces.ISkillCommand;
 import org.example.objects.items.Equipment;
 import org.example.objects.player.PlayerCharacter;
 
@@ -20,7 +21,9 @@ public class PlayerBuilder {
     private int defense = 0;
     private ArrayList<Equipment> absorbedEquipment = null;
     private ArrayList<String> skillList = null;
-    private HashMap<String, ICommand> skillCommandHashMap = null;
+    private HashMap<String, ISkillCommand> skillCommandHashMap = null;
+    private ArrayList<String> basicSkillList = null;
+    private HashMap<String, ISkillCommand> basicSkillCommandHashMap = null;
     private int experienceGained = 0;
     private int level = 1;
     private int scoreTotal = 0;
@@ -73,8 +76,16 @@ public class PlayerBuilder {
         this.skillList = skillList;
         return this;
     }
-    public PlayerBuilder setSkillCommandHashMap(HashMap<String, ICommand> skillCommandHashMap){
+    public PlayerBuilder setSkillCommandHashMap(HashMap<String, ISkillCommand> skillCommandHashMap){
         this.skillCommandHashMap = skillCommandHashMap;
+        return this;
+    }
+    public PlayerBuilder setBasicSkillList(ArrayList<String> basicSkillList){
+        this.basicSkillList = basicSkillList;
+        return this;
+    }
+    public PlayerBuilder setBasicSkillCommandHashMap(HashMap<String, ISkillCommand> basicSkillCommandHashMap){
+        this.basicSkillCommandHashMap = basicSkillCommandHashMap;
         return this;
     }
     public PlayerBuilder setExperienceGained(int experienceGained){
@@ -102,7 +113,7 @@ public class PlayerBuilder {
                 focusPointsPerTurn,
                 absorbedEquipment,
                 skillList,
-                skillCommandHashMap,
+                basicSkillList,
                 skillDamageVariance,
                 experienceGained,
                 level,

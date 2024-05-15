@@ -40,6 +40,21 @@ public abstract class Monster extends Entity {
                 focusPointsPerTurn + "," + expReward + "," + monsterSkill + "," + skillDamageVariance;
     }
 
+    public double basicAttack(){
+        System.out.println(getName() + " attacks you.");
+        return getAttack();
+    }
+
+    public void takeDamage(int damageTaken){
+        int damageTotal = damageTaken - getDefense()/5;
+        if(damageTotal < 0){
+            System.out.println("The attack was deflected! " + getName() + " took no damage!");
+        }else{
+            setHp(getHp() - damageTotal);
+            System.out.println("The " + getName() + " took " + damageTotal + "damage!");
+        }
+    }
+
     public String getMonsterSkill() {
         return monsterSkill;
     }

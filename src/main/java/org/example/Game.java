@@ -85,6 +85,10 @@ public class Game {
         else if (adventurerClass.equals("rogue")) {
             playerCharacter = playerDirector.makeRogue(playerBuilder, adventurerName, adventurerClass);
         }
+        else{
+            System.out.println("That is not a valid class\n");
+            startGame();
+        }
         exploration = new Exploration(playerCharacter, nodeMap, start, goal, mapBuilder, exploration);
         exploration.run();
     }
@@ -100,6 +104,10 @@ public class Game {
         }
         else if (adventurerClass.equals("rogue")) {
             playerCharacter = playerDirector.makeRogue(playerBuilder, adventurerName, adventurerClass);
+        }
+        else{
+            System.out.println("That is not a valid class\n");
+            startGame();
         }
         combat = new Combat(playerCharacter);
         combat.startTestEncounter();

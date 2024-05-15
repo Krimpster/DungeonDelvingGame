@@ -1,6 +1,7 @@
 package org.example.builders;
 
 import org.example.interfaces.ICommand;
+import org.example.interfaces.ISkillCommand;
 import org.example.objects.player.PlayerCharacter;
 import org.example.objects.player.PlayerSkills;
 
@@ -17,7 +18,7 @@ public class PlayerDirector {
         int fighterBaseFpPerTurn = 12;
         int fighterSkillDamageVariance = 110;
         ArrayList<String> skillList = playerSkills.getFighterSkillList();
-        HashMap<String, ICommand> skillCommandHashMap = playerSkills.getFighterSkillCommandHashMap();
+        ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
 
         playerBuilder.setName(adventurerName);
         playerBuilder.setPlayerClass(adventurerClass);
@@ -30,7 +31,7 @@ public class PlayerDirector {
         playerBuilder.setFocusPointsPerTurn(fighterBaseFpPerTurn);
         playerBuilder.setSkillDamageVariance(fighterSkillDamageVariance);
         playerBuilder.setSkillList(skillList);
-        playerBuilder.setSkillCommandHashMap(skillCommandHashMap);
+        playerBuilder.setBasicSkillList(basicSkillList);
 
         return playerBuilder.build();
     }
@@ -43,7 +44,7 @@ public class PlayerDirector {
         int mageBaseFpPerTurn = 65;
         int mageSkillDamageVariance = 130;
         ArrayList<String> skillList = playerSkills.getMageSkillList();
-        HashMap<String, ICommand> skillCommandHashMap = playerSkills.getMageSkillCommandHashMap();
+        ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
 
         playerBuilder.setName(adventurerName);
         playerBuilder.setPlayerClass(adventurerClass);
@@ -56,7 +57,7 @@ public class PlayerDirector {
         playerBuilder.setFocusPointsPerTurn(mageBaseFpPerTurn);
         playerBuilder.setSkillDamageVariance(mageSkillDamageVariance);
         playerBuilder.setSkillList(skillList);
-        playerBuilder.setSkillCommandHashMap(skillCommandHashMap);
+        playerBuilder.setBasicSkillList(basicSkillList);
 
         return playerBuilder.build();
     }
@@ -69,7 +70,7 @@ public class PlayerDirector {
         int rogueBaseFpPerTurn = 40;
         int rogueSkillDamageVariance = 115;
         ArrayList<String> skillList = playerSkills.getRogueSkillList();
-        HashMap<String, ICommand> skillCommandHashMap = playerSkills.getRogueSkillCommandHashMap();
+        ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
 
         playerBuilder.setName(adventurerName);
         playerBuilder.setPlayerClass(adventurerClass);
@@ -82,7 +83,7 @@ public class PlayerDirector {
         playerBuilder.setFocusPointsPerTurn(rogueBaseFpPerTurn);
         playerBuilder.setSkillDamageVariance(rogueSkillDamageVariance);
         playerBuilder.setSkillList(skillList);
-        playerBuilder.setSkillCommandHashMap(skillCommandHashMap);
+        playerBuilder.setBasicSkillList(basicSkillList);
 
         return playerBuilder.build();
     }

@@ -9,4 +9,9 @@ public class NormalMonster extends Monster {
         super(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
                 focusPointsPerTurn, skillDamageVariance, monsterSkill, bossSkill, expReward);
     }
+    @Override
+    public double basicAttack(){
+        System.out.println(getName() + " attacks you!");
+        return getAttack() / 1.2;
+    }
 }

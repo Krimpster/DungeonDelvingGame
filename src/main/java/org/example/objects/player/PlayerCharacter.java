@@ -1,6 +1,7 @@
 package org.example.objects.player;
 
 import org.example.interfaces.ICommand;
+import org.example.interfaces.ISkillCommand;
 import org.example.objects.Entity;
 import org.example.objects.items.Equipment;
 
@@ -11,7 +12,9 @@ public class PlayerCharacter extends Entity {
     private String playerClass;
     private ArrayList<Equipment> absorbedEquipment;
     private ArrayList<String> skillList;
-    private HashMap<String, ICommand> skillCommandHashMap;
+    private HashMap<String, ISkillCommand> skillCommandHashMap;
+    private ArrayList<String> basicSkillList;
+    private HashMap<String, ISkillCommand> basicSkillCommandHashMap;
     private int maxHp;
     private int experienceGained;
     private int level;
@@ -35,7 +38,7 @@ public class PlayerCharacter extends Entity {
                            int focusPointsPerTurn,
                            ArrayList<Equipment> absorbedEquipment,
                            ArrayList<String> skillList,
-                           HashMap<String, ICommand> skillCommandHashMap,
+                           ArrayList<String> basicSkillList,
                            int skillDamageVariance,
                            int experienceGained,
                            int level,
@@ -49,7 +52,7 @@ public class PlayerCharacter extends Entity {
         this.playerClass = playerClass;
         this.absorbedEquipment = absorbedEquipment;
         this.skillList = skillList;
-        this.skillCommandHashMap = skillCommandHashMap;
+        this.basicSkillList = basicSkillList;
         this.experienceGained = experienceGained;
         this.level = level;
         this.scoreTotal = scoreTotal;
@@ -81,6 +84,16 @@ public class PlayerCharacter extends Entity {
         setBaseFocusPoints(getFocusPointsPerTurn() + fpPerTurnStatIncrease);
 
         setLevel(getLevel() + levelIncrease);
+    }
+
+    public void takeDamage(int damageTaken){
+        int damageTotal = damageTaken - getDefense()/2;
+        if(damageTotal < 0){
+            System.out.println("The blow was deflected! You didn't take any damage!");
+        }else{
+            setHp(getHp() - damageTotal);
+            System.out.println("You took " + damageTotal + " damage from the monster's attack!");
+        }
     }
 
     public int getMaxHp() {
@@ -115,12 +128,8 @@ public class PlayerCharacter extends Entity {
         this.skillList = skillList;
     }
 
-    public HashMap<String, ICommand> getSkillCommandHashMap() {
-        return skillCommandHashMap;
-    }
-
-    public void setSkillCommandHashMap(HashMap<String, ICommand> skillCommandHashMap) {
-        this.skillCommandHashMap = skillCommandHashMap;
+    public ArrayList<String> getBasicSkillList() {
+        return basicSkillList;
     }
 
     public int getExperienceGained() {
@@ -146,5 +155,7 @@ public class PlayerCharacter extends Entity {
     public void setScoreTotal(int scoreTotal) {
         this.scoreTotal = scoreTotal;
     }
+
+
 
 }
