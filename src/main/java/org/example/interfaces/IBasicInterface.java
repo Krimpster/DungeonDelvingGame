@@ -1,5 +1,6 @@
 package org.example.interfaces;
 
-public interface ISkillCommand {
+
+public interface IBasicInterface {
     double execute();
 }

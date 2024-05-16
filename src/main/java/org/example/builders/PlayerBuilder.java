@@ -1,12 +1,9 @@
 package org.example.builders;
 
-import org.example.interfaces.ICommand;
-import org.example.interfaces.ISkillCommand;
 import org.example.objects.items.Equipment;
 import org.example.objects.player.PlayerCharacter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PlayerBuilder {
     private String name = "";
@@ -14,16 +11,15 @@ public class PlayerBuilder {
     private int baseFocusPoints = 0;
     private int focusPoints = 0;
     private int focusPointsPerTurn = 0;
-    private int skillDamageVariance = 0;
+    private int skillDamageVarianceBound = 0;
+    private int skillDamageVarianceOrigin = 0;
     private int hp = 0;
     private int maxHp = 0;
     private int attack = 0;
     private int defense = 0;
     private ArrayList<Equipment> absorbedEquipment = null;
     private ArrayList<String> skillList = null;
-    private HashMap<String, ISkillCommand> skillCommandHashMap = null;
     private ArrayList<String> basicSkillList = null;
-    private HashMap<String, ISkillCommand> basicSkillCommandHashMap = null;
     private int experienceGained = 0;
     private int level = 1;
     private int scoreTotal = 0;
@@ -48,8 +44,12 @@ public class PlayerBuilder {
         this.focusPointsPerTurn = focusPointsPerTurn;
         return this;
     }
-    public PlayerBuilder setSkillDamageVariance(int skillDamageVariance){
-        this.skillDamageVariance = skillDamageVariance;
+    public PlayerBuilder setSkillDamageVarianceBound(int skillDamageVarianceBound){
+        this.skillDamageVarianceBound = skillDamageVarianceBound;
+        return this;
+    }
+    public PlayerBuilder setSkillDamageVarianceOrigin(int skillDamageVarianceOrigin){
+        this.skillDamageVarianceOrigin = skillDamageVarianceOrigin;
         return this;
     }
     public PlayerBuilder setHp(int hp){
@@ -76,16 +76,8 @@ public class PlayerBuilder {
         this.skillList = skillList;
         return this;
     }
-    public PlayerBuilder setSkillCommandHashMap(HashMap<String, ISkillCommand> skillCommandHashMap){
-        this.skillCommandHashMap = skillCommandHashMap;
-        return this;
-    }
     public PlayerBuilder setBasicSkillList(ArrayList<String> basicSkillList){
         this.basicSkillList = basicSkillList;
-        return this;
-    }
-    public PlayerBuilder setBasicSkillCommandHashMap(HashMap<String, ISkillCommand> basicSkillCommandHashMap){
-        this.basicSkillCommandHashMap = basicSkillCommandHashMap;
         return this;
     }
     public PlayerBuilder setExperienceGained(int experienceGained){
@@ -114,7 +106,8 @@ public class PlayerBuilder {
                 absorbedEquipment,
                 skillList,
                 basicSkillList,
-                skillDamageVariance,
+                skillDamageVarianceBound,
+                skillDamageVarianceOrigin,
                 experienceGained,
                 level,
                 scoreTotal);

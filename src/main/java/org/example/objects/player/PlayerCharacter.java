@@ -1,7 +1,5 @@
 package org.example.objects.player;
 
-import org.example.interfaces.ICommand;
-import org.example.interfaces.ISkillCommand;
 import org.example.objects.Entity;
 import org.example.objects.items.Equipment;
 
@@ -12,19 +10,13 @@ public class PlayerCharacter extends Entity {
     private String playerClass;
     private ArrayList<Equipment> absorbedEquipment;
     private ArrayList<String> skillList;
-    private HashMap<String, ISkillCommand> skillCommandHashMap;
     private ArrayList<String> basicSkillList;
-    private HashMap<String, ISkillCommand> basicSkillCommandHashMap;
     private int maxHp;
     private int experienceGained;
     private int level;
     private int scoreTotal;
     private HashMap<Integer, Integer> levelBreakpoints = new HashMap<>();
     public PlayerCharacter(){
-        levelBreakpoints.put(2, 100);
-        levelBreakpoints.put(3, 250);
-        levelBreakpoints.put(4, 400);
-        levelBreakpoints.put(5, 600);
     }
 
     public PlayerCharacter(String name,
@@ -39,16 +31,19 @@ public class PlayerCharacter extends Entity {
                            ArrayList<Equipment> absorbedEquipment,
                            ArrayList<String> skillList,
                            ArrayList<String> basicSkillList,
-                           int skillDamageVariance,
+                           int skillDamageVarianceBound,
+                           int skillDamageVarianceOrigin,
                            int experienceGained,
                            int level,
                            int scoreTotal) {
-        super(name, hp, attack, defense, focusPoints, baseFocusPoints, focusPointsPerTurn, skillDamageVariance);
+        super(name, hp, attack, defense, focusPoints, baseFocusPoints,
+                focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin);
         this.maxHp = maxHp;
         this.attack = attack;
         this.defense = defense;
         this.focusPoints = focusPoints;
-        this.skillDamageVariance = skillDamageVariance;
+        this.skillDamageVarianceBound = skillDamageVarianceBound;
+        this.skillDamageVarianceOrigin = skillDamageVarianceOrigin;
         this.playerClass = playerClass;
         this.absorbedEquipment = absorbedEquipment;
         this.skillList = skillList;
@@ -56,6 +51,12 @@ public class PlayerCharacter extends Entity {
         this.experienceGained = experienceGained;
         this.level = level;
         this.scoreTotal = scoreTotal;
+
+        levelBreakpoints.put(1, 100);
+        levelBreakpoints.put(2, 250);
+        levelBreakpoints.put(3, 400);
+        levelBreakpoints.put(4, 600);
+        levelBreakpoints.put(5, 800);
     }
 
     public void levelUp(){
@@ -66,34 +67,63 @@ public class PlayerCharacter extends Entity {
             }
         }
     }
-
     private void increaseStatsOnLevelUp(){
-        int hpStatIncrease = 3;
+        int hpStatIncrease = 7;
         int attackStatIncrease = 5;
-        int defenseStatIncrease = 4;
-        int focusPointStatIncrease = 10;
-        int fpPerTurnStatIncrease = 5;
+        int defenseStatIncrease = 2;
+        double focusPointStatIncrease = getFocusPoints() * 0.2;
+        double fpPerTurnStatIncrease = getFocusPointsPerTurn() * 0.2;
         int levelIncrease = 1;
 
         setMaxHp(getMaxHp() + hpStatIncrease);
         setHp(getHp() + hpStatIncrease);
         setAttack(getAttack() + attackStatIncrease);
         setDefense(getDefense() + defenseStatIncrease);
-        setBaseFocusPoints(getBaseFocusPoints() + focusPointStatIncrease);
-        setFocusPoints(getFocusPoints() + focusPointStatIncrease);
-        setBaseFocusPoints(getFocusPointsPerTurn() + fpPerTurnStatIncrease);
+        setBaseFocusPoints(getBaseFocusPoints() + (int)focusPointStatIncrease);
+        setFocusPoints(getFocusPoints() + (int)focusPointStatIncrease);
+        setFocusPointsPerTurn(getFocusPointsPerTurn() + (int)fpPerTurnStatIncrease);
 
         setLevel(getLevel() + levelIncrease);
     }
-
+    private void increaseStatsOnEquipmentAbsorption(Equipment equipment){
+        setMaxHp(getMaxHp() + equipment.getHpModifier());
+        setHp(getHp() + equipment.getHpModifier());
+        setAttack(getAttack() + equipment.getAttackModifier());
+        setDefense(getDefense() + equipment.getDefenseModifier());
+        setBaseFocusPoints(getBaseFocusPoints() + equipment.getFpModifier());
+        setFocusPoints(getFocusPoints() + equipment.getFpModifier());
+        setBaseFocusPoints(getFocusPointsPerTurn() + equipment.getFpPerTurnModifier());
+    }
+    @Override
     public void takeDamage(int damageTaken){
         int damageTotal = damageTaken - getDefense()/2;
-        if(damageTotal < 0){
-            System.out.println("The blow was deflected! You didn't take any damage!");
+        if(damageTotal <= 0){
+            System.out.println("The blow was deflected! You didn't take any damage!\n");
         }else{
             setHp(getHp() - damageTotal);
-            System.out.println("You took " + damageTotal + " damage from the monster's attack!");
+            System.out.println("You took " + damageTotal + " damage from the monster's attack!\n");
         }
+    }
+    public void passiveHeal(){
+        int hpRegained = 0;
+        int passiveHPRegen  = (int)(getMaxHp() * 0.75);
+        if(getHp() < getMaxHp()){
+            if(getMaxHp() < (getHp() + passiveHPRegen)){
+                hpRegained = passiveHPRegen - (getHp() + passiveHPRegen - getMaxHp());
+            }
+            else{
+                hpRegained = passiveHPRegen;
+            }
+            System.out.println("You rest after the battle and regain " + hpRegained + " HP.\n");
+            setFocusPoints(getHp() + hpRegained);
+        }
+    }
+    public void defenseIncrease(PlayerSkills playerSkills, String input){
+        setDefense((int)playerSkills.getBasicSkillCommandHashMap().get(input).execute());
+    }
+
+    public void listCurrentAttributes(){
+        System.out.println("HP: " + getHp() + "     FP: " + getFocusPoints() + "\n");
     }
 
     public int getMaxHp() {
@@ -119,7 +149,10 @@ public class PlayerCharacter extends Entity {
     public void setAbsorbedEquipment(ArrayList<Equipment> absorbedEquipment) {
         this.absorbedEquipment = absorbedEquipment;
     }
-
+    public void addEquipmentToAbsorbedList(Equipment equipment){
+        absorbedEquipment.add(equipment);
+        increaseStatsOnEquipmentAbsorption(equipment);
+    }
     public ArrayList<String> getSkillList() {
         return skillList;
     }

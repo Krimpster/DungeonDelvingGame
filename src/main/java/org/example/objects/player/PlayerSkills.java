@@ -1,8 +1,9 @@
 package org.example.objects.player;
 
-import org.example.interfaces.ICommand;
-import org.example.interfaces.ISkillCommand;
-import org.example.objects.player.PlayerCharacter;
+import org.example.interfaces.IBasicInterface;
+import org.example.interfaces.IPlayerSkillCommand;
+import org.example.objects.skill_types.PlayerSkill;
+import org.example.objects.skill_types.Skill;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,52 +12,68 @@ import java.util.Random;
 public class PlayerSkills {
     private Random random = new Random();
     private PlayerCharacter playerCharacter;
-    private int skillCost;
+    private String input;
+    private ArrayList<PlayerSkill> skillValues = new ArrayList<>();
     private ArrayList<String> basicSkillList = new ArrayList<>();
-    private HashMap<String, ISkillCommand> basicSkillCommandHashMap = new HashMap<>();
+    private HashMap<String, IBasicInterface> basicSkillCommandHashMap = new HashMap<>();
     private ArrayList<String> fighterSkillList = new ArrayList<>();
     private ArrayList<String> mageSkillList = new ArrayList<>();
     private ArrayList<String> rogueSkillList = new ArrayList<>();
-    private HashMap<String, ISkillCommand> professionSkillCommandHashMap = new HashMap<>();
-
+    private HashMap<String, IPlayerSkillCommand> professionSkillCommandHashMap = new HashMap<>();
     public PlayerSkills(PlayerCharacter playerCharacter){
         this.playerCharacter = playerCharacter;
         basicSkillList.add("Attack the monster (a)");
         basicSkillList.add("Defend against the next blow (d)");
 
-        basicSkillCommandHashMap.put("a", () -> basicAttack(playerCharacter));
-        basicSkillCommandHashMap.put("d", () -> basicDefend(playerCharacter));
-
         fighterSkillList.add("Rending Flash (r)");
         fighterSkillList.add("Invigour (i)");
         fighterSkillList.add("Hammerblow (h)");
 
-        professionSkillCommandHashMap.put("r", () -> fighterSkill1(playerCharacter));
-        professionSkillCommandHashMap.put("i", () -> fighterSkill2(playerCharacter));
-        professionSkillCommandHashMap.put("h", () -> fighterSkill3(playerCharacter));
-
         mageSkillList.add("Firebolt (f)");
         mageSkillList.add("Thunderclap (t)");
-        mageSkillList.add("Ice Lance (i)");
-
-        professionSkillCommandHashMap.put("f", () -> mageSkill1(playerCharacter));
-        professionSkillCommandHashMap.put("t", () -> mageSkill2(playerCharacter));
-        professionSkillCommandHashMap.put("i", () -> mageSkill3(playerCharacter));
+        mageSkillList.add("Ice Lance (l)");
 
         rogueSkillList.add("Sneak Attack (s)");
         rogueSkillList.add("Throwing Knife (t)");
         rogueSkillList.add("Vital Strike (v)");
         rogueSkillList.add("Pilfer Enemy (p)");
+    }
 
-        professionSkillCommandHashMap.put("s", () -> rogueSkill1(playerCharacter));
-        professionSkillCommandHashMap.put("t", () -> rogueSkill2(playerCharacter));
-        professionSkillCommandHashMap.put("v", () -> rogueSkill3(playerCharacter));
-        professionSkillCommandHashMap.put("p", () -> rogueSkill4(playerCharacter));
+    public PlayerSkills(PlayerCharacter playerCharacter, String input){
+        this.playerCharacter = playerCharacter;
+        this.input = input;
+
+        basicSkillCommandHashMap.put("a", () -> basicAttack(playerCharacter));
+        basicSkillCommandHashMap.put("d", () -> basicDefend(playerCharacter));
+
+        skillValues.add(new PlayerSkill("Rending Flash","r", 15, 1.5, "fighter"));
+        skillValues.add(new PlayerSkill("Invigour","i", 60, 2.1, "fighter"));
+        skillValues.add(new PlayerSkill("Hammerblow", "h", 45, 4.0, "fighter"));
+        skillValues.add(new PlayerSkill("Firebolt", "f", 50, 1.5, "mage"));
+        skillValues.add(new PlayerSkill("Thunderclap", "t", 125, 3.5, "mage"));
+        skillValues.add(new PlayerSkill("Ice Lance", "l", 200, 5.0, "mage"));
+        skillValues.add(new PlayerSkill("Sneak Attack", "s", 30, 2.3, "rogue"));
+        skillValues.add(new PlayerSkill("Throwing Knife", "k", 55, 3.0, "rogue"));
+        skillValues.add(new PlayerSkill("Vital Strike", "v", 100, 5.0, "rogue"));
+        skillValues.add(new PlayerSkill("Pilfer Enemy", "p", 200, 1.1, "rogue"));
+
+        professionSkillCommandHashMap.put("r", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+        professionSkillCommandHashMap.put("i", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+        professionSkillCommandHashMap.put("h", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+
+        professionSkillCommandHashMap.put("f", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+        professionSkillCommandHashMap.put("t", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+        professionSkillCommandHashMap.put("l", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+
+        professionSkillCommandHashMap.put("s", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+        professionSkillCommandHashMap.put("k", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+        professionSkillCommandHashMap.put("v", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
+        professionSkillCommandHashMap.put("p", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
     }
 
     public double basicAttack(PlayerCharacter playerCharacter){
         System.out.println("You attack the monster!");
-        return playerCharacter.getAttack() / 1.2;
+        return playerCharacter.getAttack() * 1.2;
     }
 
     public double basicDefend(PlayerCharacter playerCharacter){
@@ -64,114 +81,24 @@ public class PlayerSkills {
         return playerCharacter.getDefense() * 4;
     }
 
-    public double fighterSkill1(PlayerCharacter playerCharacter){
-        skillCost = 20;
-        if(playerCharacter.getPlayerClass().equals("fighter") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Rending Flash. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
-    }
-
-    public double fighterSkill2(PlayerCharacter playerCharacter){
-        skillCost = 60;
-        if(playerCharacter.getPlayerClass().equals("fighter") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Invigour. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / 1.5;
-        }
-        return 0;
-    }
-
-    public double fighterSkill3(PlayerCharacter playerCharacter){
-        skillCost = 45;
-            if(playerCharacter.getPlayerClass().equals("fighter") &&
-                    playerCharacter.getFocusPoints() >= skillCost) {
-                System.out.println("You use HammerBlow. (" + skillCost + ")\n");
-                playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-                return playerCharacter.getAttack() / (2.5 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
+    public double playerSkill(PlayerCharacter playerCharacter, String input){
+        for (PlayerSkill ps : skillValues){
+            if (ps.getSkillAbbreviation().equals(input)){
+                int skillCost = ps.getSkillCost();
+                if(playerCharacter.getFocusPoints() >= skillCost) {
+                    System.out.println("You use " + ps.getSkillName() + ". (" + skillCost + ")\n");
+                    playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
+                    return playerCharacter.getAttack() * ps.getDamageMultiplier() * getRandom(playerCharacter);
+                }
             }
+        }
+        System.out.println("The skill fizzles due to insufficient focus...");
         return 0;
     }
 
-    public double mageSkill1(PlayerCharacter playerCharacter){
-        skillCost = 50;
-        if(playerCharacter.getPlayerClass().equals("mage") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Firebolt. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (2.5 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
-    }
-
-    public double mageSkill2(PlayerCharacter playerCharacter){
-        skillCost = 75;
-        if(playerCharacter.getPlayerClass().equals("mage") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Thunderclap. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (3.5 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
-    }
-
-    public double mageSkill3(PlayerCharacter playerCharacter){
-        skillCost = 200;
-        if(playerCharacter.getPlayerClass().equals("mage") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Ice Lance. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (5 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
-    }
-
-    public double rogueSkill1(PlayerCharacter playerCharacter){
-        skillCost = 30;
-        if(playerCharacter.getPlayerClass().equals("rogue") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Sneak Attack. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (2.3 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
-    }
-
-    public double rogueSkill2(PlayerCharacter playerCharacter){
-        skillCost = 55;
-        if(playerCharacter.getPlayerClass().equals("rogue") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Throwing Knife. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (3.0 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
-    }
-
-    public double rogueSkill3(PlayerCharacter playerCharacter){
-        skillCost = 100;
-        if(playerCharacter.getPlayerClass().equals("rogue") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Vital Strike. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (5 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
-    }
-
-    public double rogueSkill4(PlayerCharacter playerCharacter){
-        skillCost = 200;
-        if(playerCharacter.getPlayerClass().equals("rogue") &&
-                playerCharacter.getFocusPoints() >= skillCost) {
-            System.out.println("You use Pilfer. (" + skillCost + ")\n");
-            playerCharacter.setFocusPoints(playerCharacter.getFocusPoints() - skillCost);
-            return playerCharacter.getAttack() / (0.5 * random.nextDouble(playerCharacter.getSkillDamageVariance()) / 100);
-        }
-        return 0;
+    private double getRandom(PlayerCharacter playerCharacter){
+        return random.nextDouble(playerCharacter.getSkillDamageVarianceOrigin(),
+                playerCharacter.getSkillDamageVarianceBound()) / 100;
     }
 
 
@@ -179,7 +106,7 @@ public class PlayerSkills {
         return basicSkillList;
     }
 
-    public HashMap<String, ISkillCommand> getBasicSkillCommandHashMap() {
+    public HashMap<String, IBasicInterface> getBasicSkillCommandHashMap() {
         return basicSkillCommandHashMap;
     }
 
@@ -195,7 +122,7 @@ public class PlayerSkills {
         return rogueSkillList;
     }
 
-    public HashMap<String, ISkillCommand> getProfessionSkillCommandHashMap() {
+    public HashMap<String, IPlayerSkillCommand> getProfessionSkillCommandHashMap() {
         return professionSkillCommandHashMap;
     }
 }

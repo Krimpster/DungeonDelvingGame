@@ -1,12 +1,9 @@
 package org.example.builders;
 
-import org.example.interfaces.ICommand;
-import org.example.interfaces.ISkillCommand;
 import org.example.objects.player.PlayerCharacter;
 import org.example.objects.player.PlayerSkills;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PlayerDirector {
     PlayerSkills playerSkills = new PlayerSkills(new PlayerCharacter());
@@ -16,7 +13,8 @@ public class PlayerDirector {
         int fighterBaseDefense = 25;
         int fighterBaseFP = 100;
         int fighterBaseFpPerTurn = 12;
-        int fighterSkillDamageVariance = 110;
+        int fighterSkillDamageVarianceBound = 110;
+        int fighterSkillDamageVarianceOrigin = 90;
         ArrayList<String> skillList = playerSkills.getFighterSkillList();
         ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
 
@@ -29,7 +27,8 @@ public class PlayerDirector {
         playerBuilder.setBaseFocusPoints(fighterBaseFP);
         playerBuilder.setFocusPoints(fighterBaseFP);
         playerBuilder.setFocusPointsPerTurn(fighterBaseFpPerTurn);
-        playerBuilder.setSkillDamageVariance(fighterSkillDamageVariance);
+        playerBuilder.setSkillDamageVarianceBound(fighterSkillDamageVarianceBound);
+        playerBuilder.setSkillDamageVarianceOrigin(fighterSkillDamageVarianceOrigin);
         playerBuilder.setSkillList(skillList);
         playerBuilder.setBasicSkillList(basicSkillList);
 
@@ -42,7 +41,8 @@ public class PlayerDirector {
         int mageBaseDefense = 10;
         int mageBaseFP = 300;
         int mageBaseFpPerTurn = 65;
-        int mageSkillDamageVariance = 130;
+        int mageSkillDamageVarianceBound = 100;
+        int mageSkillDamageVarianceOrigin = 60;
         ArrayList<String> skillList = playerSkills.getMageSkillList();
         ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
 
@@ -55,7 +55,8 @@ public class PlayerDirector {
         playerBuilder.setBaseFocusPoints(mageBaseFP);
         playerBuilder.setFocusPoints(mageBaseFP);
         playerBuilder.setFocusPointsPerTurn(mageBaseFpPerTurn);
-        playerBuilder.setSkillDamageVariance(mageSkillDamageVariance);
+        playerBuilder.setSkillDamageVarianceBound(mageSkillDamageVarianceBound);
+        playerBuilder.setSkillDamageVarianceOrigin(mageSkillDamageVarianceOrigin);
         playerBuilder.setSkillList(skillList);
         playerBuilder.setBasicSkillList(basicSkillList);
 
@@ -68,7 +69,8 @@ public class PlayerDirector {
         int rogueBaseDefense = 20;
         int rogueBaseFP = 200;
         int rogueBaseFpPerTurn = 40;
-        int rogueSkillDamageVariance = 115;
+        int rogueSkillDamageVarianceBound = 115;
+        int rogueSkillDamageVarianceOrigin = 85;
         ArrayList<String> skillList = playerSkills.getRogueSkillList();
         ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
 
@@ -81,7 +83,8 @@ public class PlayerDirector {
         playerBuilder.setBaseFocusPoints(rogueBaseFP);
         playerBuilder.setFocusPoints(rogueBaseFP);
         playerBuilder.setFocusPointsPerTurn(rogueBaseFpPerTurn);
-        playerBuilder.setSkillDamageVariance(rogueSkillDamageVariance);
+        playerBuilder.setSkillDamageVarianceBound(rogueSkillDamageVarianceBound);
+        playerBuilder.setSkillDamageVarianceOrigin(rogueSkillDamageVarianceOrigin);
         playerBuilder.setSkillList(skillList);
         playerBuilder.setBasicSkillList(basicSkillList);
 

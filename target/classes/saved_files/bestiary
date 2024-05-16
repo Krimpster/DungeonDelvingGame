@@ -1,5 +1,6 @@
-Skeleton,95,25,40,100,100,25,140,Skewer,none,50
-Bull,150,15,50,60,60,30,100,Rush,none,50
-Slime,100,10,90,100,100,25,60,Heal,none,75
+Skeleton,60,25,40,100,100,25,140,100,Skewer,none,50
+Bull,150,15,50,60,60,30,100,80,Rush,none,50
+Slime,100,10,90,100,100,25,60,55,Heal,none,150
+Dire Skeleton,100,35,25,100,100,35,120,80,Skewer,none,200
 %
-Gorgon,350,40,40,250,250,50,170,Slice,Gore,1000
+Gorgon,350,40,40,250,250,50,170,90,Slice,Gore,1000

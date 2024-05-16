@@ -19,3 +19,10 @@ I will use Chain of Responsibility for loading files.
 I will use Strategy design pattern for switching sorting algorithms.
 
 X and Y are switched when building the maps
+
+rush 20 2.0
+skewer 60 3.5
+heal 100 80
+bash 100 6.0
+slice 50 3.0
+gore 200 8.0

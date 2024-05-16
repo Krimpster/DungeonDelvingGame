@@ -1,27 +1,24 @@
 package org.example.map;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-import static org.example.Game.playerInRoomSign;
-import static org.example.Game.checkedRoomSign;
 
 public class MapBuilder {
     private Node start;
     private Node goal;
     private Node[][] nodeMap;
-
+    public final String checkedRoomSign = "O";
+    public final char playerInRoomSign = '☻';
     private Random randomGenerator = new Random();
 
     public Node[][] getMap(){
         int[][] intMap = generateIntMap();
         nodeMap = new Node[intMap.length][intMap[0].length];
-        String startSign = "S";
-        String goalSign = "G";
-        String combatRoomSign = "M";
-        String treasureRoomSign = "*";
-        String emptySpaceSign = "X";
-        String pathwayRoomSign = ".";
+        char startSign = 'S';
+        char goalSign = 'G';
+        char combatRoomSign = 'M';
+        char treasureRoomSign = '*';
+        char emptySpaceSign = 'X';
+        char pathwayRoomSign = '.';
 
         for (int y = 0; y < intMap.length; y++){
             Node[] row = new Node[intMap.length];
@@ -59,39 +56,6 @@ public class MapBuilder {
         }
         return nodeMap;
     }
-
-    /*private void addNeighbours(Node[][] nodeMap){
-        for (int y = 0; y < nodeMap.length; y++){
-            for(int x = 0; x < nodeMap[y].length; x++){
-                ArrayList<Neighbour> neighborList = new ArrayList<>();
-                if(x != 0 ){
-                    neighborList.add(new Neighbour(nodeMap[y][x-1], 1));
-                }
-                if (y != 0) {
-                    neighborList.add(new Neighbour(nodeMap[y-1][x], 1));
-                }
-                if (x != nodeMap[y].length - 1) {
-                    neighborList.add(new Neighbour(nodeMap[y][x + 1], 1));
-                }
-                if (y != nodeMap.length - 1) {
-                    neighborList.add(new Neighbour(nodeMap[y + 1][x], 1));
-                }
-                if (x != 0 && y != 0) {
-                    neighborList.add(new Neighbour(nodeMap[y - 1][x - 1], Math.sqrt(2)));
-                }
-                if (x != nodeMap[y].length && y != 0) {
-                    neighborList.add(new Neighbour(nodeMap[y - 1][x + 1], Math.sqrt(2)));
-                }
-                if (x != 0 && y != nodeMap.length -1) {
-                    neighborList.add(new Neighbour(nodeMap[y + 1][x - 1], Math.sqrt(2)));
-                }
-                if (x != nodeMap[y].length - 1 && y != nodeMap.length - 1) {
-                    neighborList.add(new Neighbour(nodeMap[y + 1][x + 1], Math.sqrt(2)));
-                }
-                nodeMap[y][x].setNeighbourList(neighborList);
-            }
-        }
-    }*/
 
     private int[][] generateIntMap(){
         int mapSizeX = 8;

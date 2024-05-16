@@ -17,7 +17,7 @@ public class Node {
     private boolean emptySpace;
     private boolean start;
     private boolean goal;
-    private String sign = ".";
+    private char sign = '.';
 
     public Node(int x, int y){
         this.x = x;
@@ -140,11 +140,11 @@ public class Node {
         this.goal = goal;
     }
 
-    public String getSign() {
+    public char getSign() {
         return sign;
     }
 
-    public void setSign(String sign) {
+    public void setSign(char sign) {
         this.sign = sign;
     }
 }
