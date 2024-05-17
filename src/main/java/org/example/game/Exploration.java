@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class Exploration {
     private ArrayList<NormalMonster> monsterList;
-    private ArrayList<NormalMonster> higherRiskList = new ArrayList<>();
+    private ArrayList<NormalMonster> higherRiskList;
     private ArrayList<BossMonster> bossList;
     private ArrayList<Equipment> equipment;
     private Random random = new Random();

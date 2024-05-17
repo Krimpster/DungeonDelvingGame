@@ -41,7 +41,7 @@ public class FileManager {
                     bw.newLine();
                 } else {
                     bw.newLine();
-                    bw.write("%");
+                    bw.write("&");
                     bw.newLine();
                 }
             }
@@ -51,7 +51,7 @@ public class FileManager {
                     bw.newLine();
                 } else {
                     bw.newLine();
-                    bw.write("&");
+                    bw.write("%");
                     bw.newLine();
                 }
             }
@@ -88,6 +88,7 @@ public class FileManager {
             BufferedWriter bw = new BufferedWriter(fw);
             for(Leaderboard l : leaderboards){
                 bw.write(l.getCSV());
+                bw.newLine();
             }
             bw.close();
         }catch (IOException ex){
@@ -104,12 +105,13 @@ public class FileManager {
             boolean boss = false;
             boolean highRisk = false;
             while (line != null) {
-                if (line.equals("%")) {
-                    boss = true;
-                    line = br.readLine();
-                }
                 if (line.equals("&")) {
                     highRisk = true;
+                    line = br.readLine();
+                }
+                if (line.equals("%")) {
+                    boss = true;
+                    highRisk = false;
                     line = br.readLine();
                 }
                 if (!boss && !highRisk){

@@ -33,11 +33,8 @@ Defense Value Modifier:
 Focus Points Value Modifier:
 Focus Point regen Value Modifier:
 
-Skeleton,60,25,40,100,100,25,140,100,Skewer,none,50
-Bull,150,15,50,60,60,30,100,80,Rush,none,50
-Slime,100,10,90,100,100,25,60,55,Heal,none,150
-Dire Skeleton,100,35,25,100,100,35,120,80,Skewer,none,200
-%
-Gorgon,350,40,40,250,250,50,170,90,Slice,Gore,1000
-Slime Sire,500,15,50,200,200,40,110,85,Rush,Heal,1000
-Skeleton Lord,250,35,50,200,200,65,110,90,Bash,Slice,200
+Bob,mage,30909,33,0
+Krimmy,fighter,23000,35,6
+Sven,rogue,510,400,3
+Bob,fighter,51000,40,0
+Krimmy,mage,62340,26,9

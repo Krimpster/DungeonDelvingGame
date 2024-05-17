@@ -25,17 +25,17 @@ public class PlayerSkills {
         basicSkillList.add("Attack the monster (a)");
         basicSkillList.add("Defend against the next blow (d)");
 
-        fighterSkillList.add("Rending Flash (r)");
-        fighterSkillList.add("Invigour (i)");
-        fighterSkillList.add("Hammerblow (h)");
+        fighterSkillList.add("Rending Flash (r) (15)");
+        fighterSkillList.add("Invigour (i) (60)");
+        fighterSkillList.add("Hammerblow (h) (45)");
 
-        mageSkillList.add("Firebolt (f)");
-        mageSkillList.add("Thunderclap (t)");
-        mageSkillList.add("Ice Lance (l)");
+        mageSkillList.add("Firebolt (f) (50)");
+        mageSkillList.add("Thunderclap (t) (125)");
+        mageSkillList.add("Ice Lance (l) (200)");
 
-        rogueSkillList.add("Sneak Attack (s)");
-        rogueSkillList.add("Throwing Knife (t)");
-        rogueSkillList.add("Vital Strike (v)");
+        rogueSkillList.add("Sneak Attack (s) (30)");
+        rogueSkillList.add("Throwing Knife (t) (55)");
+        rogueSkillList.add("Vital Strike (v) (100)");
     }
 
     public PlayerSkills(PlayerCharacter playerCharacter, String input){

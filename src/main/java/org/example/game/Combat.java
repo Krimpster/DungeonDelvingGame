@@ -134,6 +134,7 @@ public class Combat {
                 fileManager.addToLeaderboardList(leaderboardClass);
                 fileManager.saveLeaderBoard(leaderboardFilePath.toString());
                 gameOver();
+                running = false;
             }
         }
     }
@@ -217,13 +218,7 @@ public class Combat {
 
     private void monsterCombatWin(){
         System.out.println("You have slain the " + monster.getName() + "!\n");
-        playerCharacter.setExperienceGained(playerCharacter.getExperienceGained() +
-                monster.getExpReward());
-        playerCharacter.setMonstersDefeated(playerCharacter.getMonstersDefeated() + 1);
-        playerCharacter.passiveHeal();
-        playerCharacter.levelUp();
-        turnsTaken = turnsTaken + turn;
-        playerCharacter.setScoreTotal(playerCharacter.getScoreTotal() + monsterCombatWinScore);
+        postWinRewards();
         exploration = new Exploration(playerCharacter, mapBuilder, nodeMap, playerLocation, start, goal, turnsTaken,
                 monsterList, higherRiskList, bossList, equipment);
     }
@@ -231,9 +226,15 @@ public class Combat {
     private void bossCombatWin(){
         System.out.println("You have slain the " + monster.getName() + "!\n" +
                 "The lord of the dungeon is defeated and your adventure is over, congratulations!\n");
+        postWinRewards();
+    }
+
+    private void postWinRewards() {
         playerCharacter.setExperienceGained(playerCharacter.getExperienceGained() +
                 monster.getExpReward());
+        playerCharacter.setMonstersDefeated(playerCharacter.getMonstersDefeated() + 1);
         playerCharacter.levelUp();
+        playerCharacter.passiveHeal();
         turnsTaken = turnsTaken + turn;
         playerCharacter.setScoreTotal(playerCharacter.getScoreTotal() + bossCombatWinScore);
     }
@@ -244,7 +245,7 @@ public class Combat {
 
     private MonsterSkills getSkillName(Monster monster){
         int percent = 100;
-        int percentChanceOfMonsterSkill = 50;
+        int percentChanceOfMonsterSkill = 35;
         int percentage = random.nextInt(percent);
         if (percentage < percentChanceOfMonsterSkill){
             this.monsterSkillName = monster.getMonsterSkill();
@@ -256,6 +257,6 @@ public class Combat {
 
     private void gameOver(){
         game = new Game();
-        game.menu();
+        game.startGame();
     }
 }

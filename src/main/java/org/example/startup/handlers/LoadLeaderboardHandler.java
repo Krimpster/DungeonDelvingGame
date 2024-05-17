@@ -8,6 +8,7 @@ public class LoadLeaderboardHandler extends Handler {
     public LoadLeaderboardHandler(Handler nextHandler, FileManager fileManager){
         super(nextHandler, fileManager);
     }
+
     @Override
     protected boolean handleRequest(Request request, FileManager fileManager){
         fileManager.loadLeaderBoard(request.getLeaderboardFilePath());

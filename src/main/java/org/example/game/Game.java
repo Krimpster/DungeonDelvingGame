@@ -2,6 +2,10 @@ package org.example.game;
 
 import org.example.builders.PlayerBuilder;
 import org.example.builders.PlayerDirector;
+import org.example.game.sortingalgorithms.InsertionSort;
+import org.example.game.sortingalgorithms.NameInsertionSort;
+import org.example.game.sortingalgorithms.QuickSort;
+import org.example.interfaces.ISortingOption;
 import org.example.map.MapBuilder;
 import org.example.map.Node;
 import org.example.interfaces.ICommand;
@@ -54,8 +58,8 @@ public class Game {
 
         menuCommandHashMap.put("start", () -> characterCreator());
         menuCommandHashMap.put("map", () -> previewMap());
-        menuCommandHashMap.put("leader", () -> printLeaderboard(leaderboard, "leaderboard"));
-        menuCommandHashMap.put("bestiary", () -> printMonsters(monsterList, bossList, "monster"));
+        menuCommandHashMap.put("leader", () -> printLeaderboard(leaderboard));
+        menuCommandHashMap.put("bestiary", () -> printMonsters(monsterList, higherRiskList, bossList, "monster"));
         menuCommandHashMap.put("equip", () -> printEquipment(equipment, "equipment"));
         menuCommandHashMap.put("quit", () -> quitGame());
 
@@ -77,13 +81,16 @@ public class Game {
         LoadEquipmentHandler loadEquipmentHandler = new LoadEquipmentHandler(loadLeaderboardHandler, fileManager);
         LoadMonstersHandler loadMonstersHandler = new LoadMonstersHandler(loadEquipmentHandler, fileManager);
 
-        loadMonstersHandler.handle(new Request());
+        Request request = new Request();
+        loadMonstersHandler.handle(request, fileManager);
+
 
         monsterList = fileManager.getMonsters();
         higherRiskList = fileManager.getRiskierMonsters();
         bossList = fileManager.getBosses();
         equipment = fileManager.getEquipment();
-        leaderboard = fileManager.getLeaderboards();
+        NameInsertionSort nameInsertionSort = new NameInsertionSort(fileManager.getLeaderboards());
+        leaderboard = nameInsertionSort.sortByName();
 
         menu();
     }
@@ -155,16 +162,37 @@ public class Game {
         System.exit(0);
     }
 
-    private void printLeaderboard(ArrayList<Leaderboard> leaderboard, String message){
-        System.out.println("\n---EQUIPMENT---\n");
+    private void printLeaderboard(ArrayList<Leaderboard> leaderboard){
+        System.out.println("\n---LEADERBOARD---\n");
         for (Leaderboard l : leaderboard){
             System.out.println(l.getDetails());
         }
+        String input = inputGetter.getStringInput("What would you like to do? (quick, insert, menu) \n");
+        if (input.equals("quick")){
+            sortLeaderboard(new QuickSort(), leaderboard);
+        }
+        if (input.equals("insert")){
+            sortLeaderboard(new InsertionSort(), leaderboard);
+        }
+        if (input.equals("menu")){
+            menu();
+        }
+        else {
+            System.out.println("Invalid input!");
+        }
+    }
+    private void sortLeaderboard(ISortingOption sortingOption, ArrayList<Leaderboard> leaderboard){
+        printLeaderboard(sortingOption.sort(leaderboard));
     }
 
-    private void printMonsters(ArrayList<NormalMonster> monsterList, ArrayList<BossMonster> bossList, String message){
+    private void printMonsters(ArrayList<NormalMonster> monsterList, ArrayList<NormalMonster> higherRiskList,
+                               ArrayList<BossMonster> bossList, String message){
         System.out.println("\n---NORMAL MONSTERS---\n");
         for (NormalMonster nm : monsterList){
+            System.out.println(nm.getDetails());
+        }
+        System.out.println("\n---HIGHER RISK MONSTERS---\n");
+        for (NormalMonster nm : higherRiskList){
             System.out.println(nm.getDetails());
         }
         System.out.println("\n---BOSS MONSTERS---\n");
@@ -198,6 +226,7 @@ public class Game {
             System.out.println("Not a valid input!");
         }
         fileManager.saveMonsters(bestiaryFilePath.toString());
+        menu();
     }
 
     private NormalMonster createMonster(){
@@ -212,7 +241,7 @@ public class Game {
         int skillDamageVarianceBound = inputGetter.getIntInput("\nWhat will it's maximum skill damage bound be? ");
         String monsterSkill = inputGetter.getSkillStringInput("\nWhat will it's skill be? You can only choose from these:\n");
         String bossSkill = "none";
-        int expReward = inputGetter.getIntInput("\nWhat will it's name be? ");
+        int expReward = inputGetter.getIntInput("\nWhat will it's EXP reward be? ");
         return new NormalMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
                 focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
                 monsterSkill, bossSkill, expReward);
@@ -248,6 +277,7 @@ public class Game {
         equipment.add(new Equipment(itemName, itemType, hpModifier, attackModifier,
                 defenseModifier, fpModifier, fpPerTurnModifier));
         fileManager.saveEquipment(equipmentFilePath.toString());
+        menu();
     }
 
 }

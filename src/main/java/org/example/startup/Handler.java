@@ -9,13 +9,13 @@ public abstract class Handler {
         this.fileManager = fileManager;
     }
 
-    public boolean handle(Request request){
+    public boolean handle(Request request, FileManager fileManager){
         boolean success = handleRequest(request, fileManager);
         if(!success){
             return false;
         }
         if(nextHandler != null){
-            return nextHandler.handleRequest(request, fileManager);
+            return nextHandler.handle(request, fileManager);
         }
         return true;
     }
