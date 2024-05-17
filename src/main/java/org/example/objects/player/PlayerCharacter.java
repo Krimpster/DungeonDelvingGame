@@ -95,7 +95,7 @@ public class PlayerCharacter extends Entity {
         setDefense(getDefense() + equipment.getDefenseModifier());
         setBaseFocusPoints(getBaseFocusPoints() + equipment.getFpModifier());
         setFocusPoints(getFocusPoints() + equipment.getFpModifier());
-        setBaseFocusPoints(getFocusPointsPerTurn() + equipment.getFpPerTurnModifier());
+        setFocusPointsPerTurn(getFocusPointsPerTurn() + equipment.getFpPerTurnModifier());
     }
     @Override
     public void takeDamage(int damageTaken){
@@ -133,7 +133,7 @@ public class PlayerCharacter extends Entity {
         System.out.println("HP: " + getHp() + "/" + getMaxHp() +  " | FP: " + getFocusPoints() + "/" + getBaseFocusPoints() + "\n" +
                 "Level: " + getLevel() + " | EXP Total: " + getExperienceGained() + "\n" +
                 "Attack: " + getAttack() + " | Defense: " + getDefense() + "\n" +
-                "FP Regen: " + getBaseFocusPoints() + " | Monsters Defeated: " + getMonstersDefeated() + "\n" +
+                "FP Regen: " + getFocusPointsPerTurn() + " | Monsters Defeated: " + getMonstersDefeated() + "\n" +
                 "Current Score: " + getScoreTotal() + "\n" +
                 "Equipment: " + "\n");
 
