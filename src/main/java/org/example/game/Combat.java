@@ -124,6 +124,7 @@ public class Combat {
             }
             if(monster.getHp() <= 0 && monster.getBossSkill().equals("none")){
                 monsterCombatWin();
+                playerLocation.setMonsterRoom(false);
                 running = false;
             }
             else if (monster.getHp() <= 0 && !monster.getBossSkill().equals("none")) {
