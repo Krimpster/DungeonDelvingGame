@@ -183,6 +183,7 @@ public class Exploration {
             System.out.println("You found an item! It's a " + equipment.get(randomSelectedItem).getItemType() + ".\n" +
                     equipment.get(randomSelectedItem).getItemName() + " added to inventory! \n");
             playerCharacter.addEquipmentToAbsorbedList(equipment.get(randomSelectedItem));
+            playerLocation.setTreasureRoom(false);
         }else{
             System.out.println("You were unable to find anything. What a shame...\n");
         }
