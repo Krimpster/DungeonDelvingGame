@@ -21,9 +21,17 @@ public class Equipment extends Item{
 
     @Override
     public String getCSV(){
-        return itemName + "," + itemType + "," + attackModifier + "," +
+        return itemName + "," + itemType + "," + hpModifier + "," + attackModifier + "," +
                 defenseModifier + "," + fpModifier + "," + fpPerTurnModifier;
     }
+
+    public String getDetails(){
+        return "Item Name: " + itemName + " | Item Type: " + itemType + " | Health Value Modifier: " + hpModifier +
+                " | Attack Value Modifier: " + attackModifier + " | Defense Value Modifier: " + defenseModifier +
+                " | Focus Points Value Modifier: " + fpModifier +
+                " | Focus Point regen Value Modifier: " + fpPerTurnModifier;
+    }
+
 
     public int getHpModifier() {
         return hpModifier;

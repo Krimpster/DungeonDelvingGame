@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class Exploration {
     private ArrayList<NormalMonster> monsterList;
+    private ArrayList<NormalMonster> higherRiskList = new ArrayList<>();
     private ArrayList<BossMonster> bossList;
     private ArrayList<Equipment> equipment;
     private Random random = new Random();
@@ -41,6 +42,7 @@ public class Exploration {
                        Node goal,
                        MapBuilder mapBuilder,
                        ArrayList<NormalMonster> monsterList,
+                       ArrayList<NormalMonster> higherRiskList,
                        ArrayList<BossMonster> bossList,
                        ArrayList<Equipment> equipment){
         this.playerCharacter = playerCharacter;
@@ -49,6 +51,7 @@ public class Exploration {
         this.goal = goal;
         this.mapBuilder = mapBuilder;
         this.monsterList = monsterList;
+        this.higherRiskList = higherRiskList;
         this.bossList = bossList;
         this.equipment = equipment;
 
@@ -62,13 +65,15 @@ public class Exploration {
         explorationChoices.add("Move eastward. (r)");
         explorationChoices.add("Move westward. (l)");
         explorationChoices.add("Move southward. (d)");
-        explorationChoices.add("Scavenge current room. (scav)\n\n\n");
+        explorationChoices.add("Scavenge current room. (scav)");
+        explorationChoices.add("Check status. (status)\n\n\n");
 
         explorationCommandHashMap.put("up", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("r", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("l", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("d", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("scav", () -> scavengeRoom(playerLocation));
+        explorationCommandHashMap.put("status", () -> playerCharacter.listCurrentStats());
     }
 
     public Exploration(PlayerCharacter playerCharacter,
@@ -79,6 +84,7 @@ public class Exploration {
                        Node goal,
                        int turnsTaken,
                        ArrayList<NormalMonster> monsterList,
+                       ArrayList<NormalMonster> higherRiskList,
                        ArrayList<BossMonster> bossList,
                        ArrayList<Equipment> equipment){
         this.playerCharacter = playerCharacter;
@@ -89,6 +95,7 @@ public class Exploration {
         this.goal = goal;
         this.turnsTaken = turnsTaken;
         this.monsterList = monsterList;
+        this.higherRiskList = higherRiskList;
         this.bossList = bossList;
         this.equipment = equipment;
 
@@ -96,13 +103,15 @@ public class Exploration {
         explorationChoices.add("Move eastward. (r)");
         explorationChoices.add("Move westward. (l)");
         explorationChoices.add("Move southward. (d)");
-        explorationChoices.add("Scavenge current room. (scav)\n\n\n");
+        explorationChoices.add("Scavenge current room. (scav)");
+        explorationChoices.add("Check status. (status)\n\n\n");
 
         explorationCommandHashMap.put("up", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("r", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("l", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("d", () -> movePlayer(actionInput, playerLocation, nodeMap));
         explorationCommandHashMap.put("scav", () -> scavengeRoom(playerLocation));
+        explorationCommandHashMap.put("status", () -> playerCharacter.listCurrentStats());
     }
 
     public void run(){
@@ -117,7 +126,6 @@ public class Exploration {
             if (explorationCommandHashMap.containsKey(actionInput)) {
                 playerStatActions(playerCharacter);
                 explorationCommandHashMap.get(actionInput).execute();
-                turnsTaken++;
             }
             if (nodeMap[playerLocation.getY()][playerLocation.getX()].isGoal()) {
                 playerStatActions(playerCharacter);
@@ -161,6 +169,7 @@ public class Exploration {
                 movementActions(nodeMap, previousPosYValue, previousPosXValue,
                         playerPosYValue + 1, playerPosXValue, "south");
             }
+            turnsTaken++;
         }
         catch(Exception e){
             System.out.println("There's a wall blocking your passage.\n");
@@ -171,6 +180,8 @@ public class Exploration {
     private void scavengeRoom(Node playerLocation){
         if (playerLocation.isTreasureRoom()){
             int randomSelectedItem = random.nextInt(equipment.size());
+            System.out.println("You found an item! It's a " + equipment.get(randomSelectedItem).getItemType() + ".\n" +
+                    equipment.get(randomSelectedItem).getItemName() + " added to inventory! \n");
             playerCharacter.addEquipmentToAbsorbedList(equipment.get(randomSelectedItem));
         }else{
             System.out.println("You were unable to find anything. What a shame...\n");
@@ -180,7 +191,7 @@ public class Exploration {
     private void startCombat(String message){
         System.out.println(message);
         Combat combat = new Combat(playerCharacter, mapBuilder, nodeMap, playerLocation,
-                start, goal, turnsTaken, monsterList, bossList, equipment);
+                start, goal, turnsTaken, monsterList, higherRiskList, bossList, equipment);
         combat.startCombat();
     }
     private void movementActions(Node[][] nodeMap, int previousPosYValue, int previousPosXValue,

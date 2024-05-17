@@ -1,5 +1,6 @@
 package org.example.builders;
 
+import org.example.objects.items.Equipment;
 import org.example.objects.player.PlayerCharacter;
 import org.example.objects.player.PlayerSkills;
 
@@ -17,6 +18,9 @@ public class PlayerDirector {
         int fighterSkillDamageVarianceOrigin = 90;
         ArrayList<String> skillList = playerSkills.getFighterSkillList();
         ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
+        ArrayList<Equipment> absorbedEquipment = new ArrayList<>();
+        absorbedEquipment.add(new Equipment("Trusty Sword","Sword",
+                0,0,0,0,0));
 
         playerBuilder.setName(adventurerName);
         playerBuilder.setPlayerClass(adventurerClass);
@@ -31,6 +35,7 @@ public class PlayerDirector {
         playerBuilder.setSkillDamageVarianceOrigin(fighterSkillDamageVarianceOrigin);
         playerBuilder.setSkillList(skillList);
         playerBuilder.setBasicSkillList(basicSkillList);
+        playerBuilder.setAbsorbedEquipment(absorbedEquipment);
 
         return playerBuilder.build();
     }
@@ -45,6 +50,9 @@ public class PlayerDirector {
         int mageSkillDamageVarianceOrigin = 60;
         ArrayList<String> skillList = playerSkills.getMageSkillList();
         ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
+        ArrayList<Equipment> absorbedEquipment = new ArrayList<>();
+        absorbedEquipment.add(new Equipment("Familiar Grimoire","Book",
+                0,0,0,0,0));
 
         playerBuilder.setName(adventurerName);
         playerBuilder.setPlayerClass(adventurerClass);
@@ -59,6 +67,7 @@ public class PlayerDirector {
         playerBuilder.setSkillDamageVarianceOrigin(mageSkillDamageVarianceOrigin);
         playerBuilder.setSkillList(skillList);
         playerBuilder.setBasicSkillList(basicSkillList);
+        playerBuilder.setAbsorbedEquipment(absorbedEquipment);
 
         return playerBuilder.build();
     }
@@ -73,6 +82,9 @@ public class PlayerDirector {
         int rogueSkillDamageVarianceOrigin = 85;
         ArrayList<String> skillList = playerSkills.getRogueSkillList();
         ArrayList<String> basicSkillList = playerSkills.getBasicSkillList();
+        ArrayList<Equipment> absorbedEquipment = new ArrayList<>();
+        absorbedEquipment.add(new Equipment("Comfy Cloak","Cloak",
+                0,0,0,0,0));
 
         playerBuilder.setName(adventurerName);
         playerBuilder.setPlayerClass(adventurerClass);
@@ -87,6 +99,7 @@ public class PlayerDirector {
         playerBuilder.setSkillDamageVarianceOrigin(rogueSkillDamageVarianceOrigin);
         playerBuilder.setSkillList(skillList);
         playerBuilder.setBasicSkillList(basicSkillList);
+        playerBuilder.setAbsorbedEquipment(absorbedEquipment);
 
         return playerBuilder.build();
     }

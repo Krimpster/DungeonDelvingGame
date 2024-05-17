@@ -5,9 +5,9 @@ import org.example.objects.player.PlayerCharacter;
 import org.example.objects.player.PlayerSkills;
 
 public abstract class Monster extends Entity {
-    private String monsterSkill;
-    private String bossSkill;
-    private int expReward;
+    protected String monsterSkill;
+    protected String bossSkill;
+    protected int expReward;
 
     public Monster(String name,
                    int hp,
@@ -42,6 +42,13 @@ public abstract class Monster extends Entity {
                 monsterSkill + "," + bossSkill + "," + expReward;
     }
 
+    public String getDetails(){
+        return "Monster: " + name + " | Health: " + hp + " | Attack value: " + attack + " | Defense value: " + defense +
+                " | Focus Points: " + focusPoints + " | Focus Point regen: " + focusPointsPerTurn +
+                " | Skill Damage range: " + skillDamageVarianceOrigin + " - " + skillDamageVarianceBound +
+                " | Skill name: " + monsterSkill + " | EXP reward: " + expReward;
+    }
+
     public double basicAttack(){
         System.out.println(getName() + " attacks you.\n");
         return getAttack();
@@ -58,16 +65,28 @@ public abstract class Monster extends Entity {
     }
     public void dealSkillDamage(PlayerCharacter playerCharacter, Monster monster,
                                 String skillName, MonsterSkills monsterSkills){
-        playerCharacter.takeDamage((int)monsterSkills.getMonsterSkills().get(skillName).execute(monster, skillName));
+        if (isSkillNone(skillName)) {
+            playerCharacter.takeDamage((int)monsterSkills.getMonsterSkills().get(skillName).execute(monster, skillName));
+        }
     }
     public void healViaSkill(Monster monster, MonsterSkills monsterSkills, String skillName){
-        int healedAmount = (int)monsterSkills.getMonsterSkills().get(skillName).execute(monster, skillName);
+        if (isSkillNone(skillName)) {
+            int healedAmount = (int) monsterSkills.getMonsterSkills().get(skillName).execute(monster, skillName);
 
-        if(healedAmount > 0.33 * getHp()) {
-            healedAmount = (int)(getHp() * 0.33);
+            if (healedAmount > 0.33 * getHp()) {
+                healedAmount = (int) (getHp() * 0.33);
+            }
+
+            setHp(healedAmount);
         }
+    }
 
-        setHp(healedAmount);
+    private boolean isSkillNone(String skillName){
+        if(skillName.equals("none")){
+            System.out.println("The monster acts erratically, missing it's turn...");
+            return false;
+        }
+        return true;
     }
 
     @Override

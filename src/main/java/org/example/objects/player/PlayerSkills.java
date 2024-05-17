@@ -36,7 +36,6 @@ public class PlayerSkills {
         rogueSkillList.add("Sneak Attack (s)");
         rogueSkillList.add("Throwing Knife (t)");
         rogueSkillList.add("Vital Strike (v)");
-        rogueSkillList.add("Pilfer Enemy (p)");
     }
 
     public PlayerSkills(PlayerCharacter playerCharacter, String input){
@@ -55,7 +54,6 @@ public class PlayerSkills {
         skillValues.add(new PlayerSkill("Sneak Attack", "s", 30, 2.3, "rogue"));
         skillValues.add(new PlayerSkill("Throwing Knife", "k", 55, 3.0, "rogue"));
         skillValues.add(new PlayerSkill("Vital Strike", "v", 100, 5.0, "rogue"));
-        skillValues.add(new PlayerSkill("Pilfer Enemy", "p", 200, 1.1, "rogue"));
 
         professionSkillCommandHashMap.put("r", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
         professionSkillCommandHashMap.put("i", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
@@ -68,7 +66,6 @@ public class PlayerSkills {
         professionSkillCommandHashMap.put("s", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
         professionSkillCommandHashMap.put("k", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
         professionSkillCommandHashMap.put("v", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
-        professionSkillCommandHashMap.put("p", (playerCharacter1, input1) -> playerSkill(playerCharacter, input));
     }
 
     public double basicAttack(PlayerCharacter playerCharacter){

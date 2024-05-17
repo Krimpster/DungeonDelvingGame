@@ -17,4 +17,13 @@ public class BossMonster extends Monster {
         System.out.println(getName() + " attacks you!");
         return getAttack() * 1.2;
     }
+
+    @Override
+    public String getDetails(){
+        return "Monster: " + name + " | Health: " + hp + " | Attack value: " + attack + " | Defense value: " + defense +
+                " | Focus Points: " + focusPoints + " | Focus Point regen: " + focusPointsPerTurn +
+                " | Skill Damage range: " + skillDamageVarianceOrigin + " - " + skillDamageVarianceBound +
+                " | First Skill name: " + monsterSkill + " | Second Skill name: " + bossSkill +
+                " | EXP reward: " + expReward;
+    }
 }

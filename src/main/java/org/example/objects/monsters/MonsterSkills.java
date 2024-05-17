@@ -10,17 +10,28 @@ import java.util.Random;
 
 public class MonsterSkills {
     private Random random = new Random();
+    private ArrayList<String> skillNames = new ArrayList<>();
     private ArrayList<Skill> skillValues = new ArrayList<>();
     private HashMap<String, IMonsterSkillInterface> monsterSkills = new HashMap<>();
     private String skillName;
+
+    public MonsterSkills(){
+        skillNames.add("Rush");
+        skillNames.add("Skewer");
+        skillNames.add("Heal");
+        skillNames.add("Bash");
+        skillNames.add("Slice");
+        skillNames.add("Gore");
+    }
+
     public MonsterSkills(Monster monster, String skillName){
         this.skillName = skillName;
         skillValues.add(new Skill("Rush", 20, 2.0));
-        skillValues.add(new Skill("Skewer", 60, 3.5));
+        skillValues.add(new Skill("Skewer", 60, 2.6));
         skillValues.add(new Skill("Heal", 100, 9.0));
-        skillValues.add(new Skill("Bash", 100, 6.0));
-        skillValues.add(new Skill("Slice", 50, 3.0));
-        skillValues.add(new Skill("Gore", 200, 8.0));
+        skillValues.add(new Skill("Bash", 75, 3.0));
+        skillValues.add(new Skill("Slice", 50, 2.4));
+        skillValues.add(new Skill("Gore", 200, 4.3));
 
 
         monsterSkills.put("Rush", (monster1, string) -> monsterSkill(monster, skillName));
@@ -33,9 +44,6 @@ public class MonsterSkills {
 
     public double monsterSkill(Monster monster, String skillName){
         for (Skill s : skillValues){
-            if(s.getSkillName().equals("none")){
-                System.out.println("The monster acts erratically, missing it's turn.\n");
-            }
             if (s.getSkillName().equals(skillName)){
                 int skillCost = s.getSkillCost();
                 if(monster.getFocusPoints() >= skillCost) {
@@ -54,5 +62,9 @@ public class MonsterSkills {
     }
     public HashMap<String, IMonsterSkillInterface> getMonsterSkills() {
         return monsterSkills;
+    }
+
+    public ArrayList<String> getSkillNames() {
+        return skillNames;
     }
 }

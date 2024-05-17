@@ -7,18 +7,18 @@ treasureRoom = 91-110
 combatRoom = 111-150
 
 TO DO
-modify getMap() if-else to use a function for it's node function calls.
+modify getMap() if-else to use a function for it's node function calls. - abandoned due to time constraint
 
-A* failstate: I
+Add listing options for monsters, equipment and leaderboard in main menu - working on
 
 DOCUMENT DEETS:
-I used Command design pattern.
-I used Builder design pattern.
+I used Command design pattern. - ✓
+I used Builder design pattern. - ✓
+I used Chain of Responsibility for loading files. - ✓
 
-I will use Chain of Responsibility for loading files.
-I will use Strategy design pattern for switching sorting algorithms.
+I will use Strategy design pattern for switching sorting algorithms. - working on
 
-X and Y are switched when building the maps
+X and Y are switched when building the maps - fixed ✓
 
 rush 20 2.0
 skewer 60 3.5
@@ -26,3 +26,18 @@ heal 100 80
 bash 100 6.0
 slice 50 3.0
 gore 200 8.0
+
+Health Value Modifier:
+Attack Value Modifier:
+Defense Value Modifier:
+Focus Points Value Modifier:
+Focus Point regen Value Modifier:
+
+Skeleton,60,25,40,100,100,25,140,100,Skewer,none,50
+Bull,150,15,50,60,60,30,100,80,Rush,none,50
+Slime,100,10,90,100,100,25,60,55,Heal,none,150
+Dire Skeleton,100,35,25,100,100,35,120,80,Skewer,none,200
+%
+Gorgon,350,40,40,250,250,50,170,90,Slice,Gore,1000
+Slime Sire,500,15,50,200,200,40,110,85,Rush,Heal,1000
+Skeleton Lord,250,35,50,200,200,65,110,90,Bash,Slice,200

@@ -1,7 +1,6 @@
 package org.example.game;
 
-import org.example.FileManager;
-import org.example.InputGetter;
+import org.example.startup.FileManager;
 import org.example.interfaces.ICommand;
 import org.example.map.MapBuilder;
 import org.example.map.Node;
@@ -18,8 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import static org.example.FileManager.bestiaryFilePath;
-import static org.example.FileManager.leaderboardFilePath;
+import static org.example.startup.FileManager.leaderboardFilePath;
 
 public class Combat {
     private InputGetter inputGetter = new InputGetter();
@@ -29,6 +27,7 @@ public class Combat {
     private Game game;
     private ArrayList<NormalMonster> monsterList;
     private ArrayList<BossMonster> bossList;
+    private ArrayList<NormalMonster> higherRiskList = new ArrayList<>();
     private ArrayList<Equipment> equipment;
     private NormalMonster normalMonster;
     private BossMonster bossMonster;
@@ -58,6 +57,7 @@ public class Combat {
                   Node goal,
                   int turnsTaken,
                   ArrayList<NormalMonster> monsterList,
+                  ArrayList<NormalMonster> higherRiskList,
                   ArrayList<BossMonster> bossList,
                   ArrayList<Equipment> equipment){
         this.playerCharacter = playerCharacter;
@@ -68,6 +68,7 @@ public class Combat {
         this.goal = goal;
         this.turnsTaken = turnsTaken;
         this.monsterList = monsterList;
+        this.higherRiskList = higherRiskList;
         this.bossList = bossList;
         this.equipment = equipment;
         playerSkills = new PlayerSkills(playerCharacter, "");
@@ -81,25 +82,25 @@ public class Combat {
     }
 
     private Monster getMonster(){
-        if(playerLocation.isGoal()){
-            fileManager.loadMonsters(bestiaryFilePath.toString());
-            bossList = fileManager.getBosses();
+        if(playerLocation.isGoal()){;
             int selectedMonster = random.nextInt(bossList.size());
             bossMonster = bossList.get(selectedMonster);
             monsterSkills = new MonsterSkills(bossMonster, "");
             return bossMonster;
         }
-        if (playerLocation.isMonsterRoom()) {
-            fileManager.loadMonsters(bestiaryFilePath.toString());
-            monsterList = fileManager.getMonsters();
+        if (playerLocation.isMonsterRoom() && playerCharacter.getMonstersDefeated() < 4) {
             int selectedMonster = random.nextInt(monsterList.size());
             normalMonster = monsterList.get(selectedMonster);
-            monsterSkills = new MonsterSkills(normalMonster, "");
+            return normalMonster;
+        }
+        if (playerLocation.isMonsterRoom() && playerCharacter.getMonstersDefeated() >= 4) {
+            int selectedMonster = random.nextInt(higherRiskList.size());
+            normalMonster = higherRiskList.get(selectedMonster);
             return normalMonster;
         }
         System.out.println("Something went wrong.");
-        exploration = new Exploration(playerCharacter, mapBuilder,
-                nodeMap, playerLocation, start, goal, turnsTaken, monsterList, bossList, equipment);
+        exploration = new Exploration(playerCharacter, mapBuilder, nodeMap, playerLocation, start, goal, turnsTaken,
+                monsterList, higherRiskList, bossList, equipment);
         return null;
     }
 
@@ -109,7 +110,7 @@ public class Combat {
 
         while(running){
             if(turn % 2 != 0){
-                playerCharacter.listCurrentAttributes();
+                playerCharacter.listCurrentHPAndFP();
                 playerTakesTurn(playerCharacter);
             }
             else{
@@ -127,7 +128,8 @@ public class Combat {
             }
             else if (monster.getHp() <= 0 && !monster.getBossSkill().equals("none")) {
                 bossCombatWin();
-                leaderboardClass = new Leaderboard(playerCharacter.getName(), playerCharacter.getPlayerClass(), turnsTaken);
+                leaderboardClass = new Leaderboard(playerCharacter.getName(), playerCharacter.getPlayerClass(),
+                        turnsTaken, playerCharacter.getMonstersDefeated());
                 leaderboardClass.calculateScore(playerCharacter, turnsTaken);
                 fileManager.addToLeaderboardList(leaderboardClass);
                 fileManager.saveLeaderBoard(leaderboardFilePath.toString());
@@ -149,7 +151,6 @@ public class Combat {
     private void monsterTakesTurn(Monster monster){
         int monsterRandomness = random.nextInt(100);
         double damageTaken;
-        double healedAmount;
         if (monsterRandomness <= 15){
             damageTaken = monster.basicAttack();
             playerCharacter.takeDamage((int)damageTaken);
@@ -157,13 +158,9 @@ public class Combat {
         else {
             monsterSkills = getSkillName(monster);
             if(monster.getMonsterSkill().equals("Heal")){
-                healedAmount = monsterSkills.getMonsterSkills().get(monster.getMonsterSkill()).execute(monster,
-                        monster.getMonsterSkill());
                 monster.healViaSkill(monster, monsterSkills, monsterSkillName);
             }
             else {
-                damageTaken = monsterSkills.getMonsterSkills().get(monster.getMonsterSkill()).execute(monster,
-                        monster.getMonsterSkill());
                 monster.dealSkillDamage(playerCharacter, monster, monsterSkillName, monsterSkills);
             }
         }
@@ -222,12 +219,13 @@ public class Combat {
         System.out.println("You have slain the " + monster.getName() + "!\n");
         playerCharacter.setExperienceGained(playerCharacter.getExperienceGained() +
                 monster.getExpReward());
+        playerCharacter.setMonstersDefeated(playerCharacter.getMonstersDefeated() + 1);
         playerCharacter.passiveHeal();
         playerCharacter.levelUp();
         turnsTaken = turnsTaken + turn;
         playerCharacter.setScoreTotal(playerCharacter.getScoreTotal() + monsterCombatWinScore);
-        exploration = new Exploration(playerCharacter, mapBuilder,
-                nodeMap, playerLocation, start, goal, turnsTaken, monsterList, bossList, equipment);
+        exploration = new Exploration(playerCharacter, mapBuilder, nodeMap, playerLocation, start, goal, turnsTaken,
+                monsterList, higherRiskList, bossList, equipment);
     }
 
     private void bossCombatWin(){
@@ -246,7 +244,7 @@ public class Combat {
 
     private MonsterSkills getSkillName(Monster monster){
         int percent = 100;
-        int percentChanceOfMonsterSkill = 90;
+        int percentChanceOfMonsterSkill = 50;
         int percentage = random.nextInt(percent);
         if (percentage < percentChanceOfMonsterSkill){
             this.monsterSkillName = monster.getMonsterSkill();

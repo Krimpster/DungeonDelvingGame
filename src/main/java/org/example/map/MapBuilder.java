@@ -18,7 +18,7 @@ public class MapBuilder {
         char combatRoomSign = 'M';
         char treasureRoomSign = '*';
         char emptySpaceSign = 'X';
-        char pathwayRoomSign = '.';
+        char pathwayRoomSign = '∎';
 
         for (int y = 0; y < intMap.length; y++){
             Node[] row = new Node[intMap.length];

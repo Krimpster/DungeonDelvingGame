@@ -1,4 +1,4 @@
-package org.example;
+package org.example.startup;
 
 
 import org.example.objects.Leaderboard;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class FileManager {
     private ArrayList<NormalMonster> monsters = new ArrayList<>();
+    private ArrayList<NormalMonster> riskierMonsters = new ArrayList<>();
     private ArrayList<BossMonster> bosses = new ArrayList<>();
     private ArrayList<Equipment> equipment = new ArrayList<>();
     private ArrayList<Leaderboard> leaderboards = new ArrayList<>();
@@ -36,20 +37,29 @@ public class FileManager {
             BufferedWriter bw = new BufferedWriter(fw);
             for (int i = 0; i < monsters.size(); i++) {
                 bw.write(monsters.get(i).getCSV());
-                if (i < monsters.size() - 1){
+                if (i < monsters.size() - 1) {
                     bw.newLine();
-                }
-                else {
+                } else {
                     bw.newLine();
                     bw.write("%");
                     bw.newLine();
                 }
-                for(BossMonster b : bosses){
-                    bw.write(b.getCSV());
+            }
+            for (int i = 0; i < riskierMonsters.size(); i++) {
+                bw.write(riskierMonsters.get(i).getCSV());
+                if (i < riskierMonsters.size() - 1) {
+                    bw.newLine();
+                } else {
+                    bw.newLine();
+                    bw.write("&");
                     bw.newLine();
                 }
-
             }
+            for(BossMonster b : bosses){
+                bw.write(b.getCSV());
+                bw.newLine();
+            }
+
             bw.close();
         }catch (IOException ex){
             System.out.println(ex);
@@ -92,12 +102,17 @@ public class FileManager {
             BufferedReader br = new BufferedReader(fr);
             String line = br.readLine();
             boolean boss = false;
+            boolean highRisk = false;
             while (line != null) {
                 if (line.equals("%")) {
                     boss = true;
                     line = br.readLine();
                 }
-                if (!boss){
+                if (line.equals("&")) {
+                    highRisk = true;
+                    line = br.readLine();
+                }
+                if (!boss && !highRisk){
                     String[] values = line.split(",");
                     String name = values[0];
                     int hp = Integer.parseInt(values[1]);
@@ -115,7 +130,27 @@ public class FileManager {
                             focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
                             monsterSkill, bossSkill, expReward));
                     line = br.readLine();
-                }else{
+                }
+                if (highRisk){
+                    String[] values = line.split(",");
+                    String name = values[0];
+                    int hp = Integer.parseInt(values[1]);
+                    int baseAttack = Integer.parseInt(values[2]);
+                    int baseDefense = Integer.parseInt(values[3]);
+                    int baseFocusPoints = Integer.parseInt(values[4]);
+                    int focusPoints = Integer.parseInt(values[5]);
+                    int focusPointsPerTurn = Integer.parseInt(values[6]);
+                    int skillDamageVarianceBound = Integer.parseInt(values[7]);
+                    int skillDamageVarianceOrigin = Integer.parseInt(values[8]);
+                    String monsterSkill = values[9];
+                    String bossSkill = values[10];
+                    int expReward = Integer.parseInt(values[11]);
+                    riskierMonsters.add(new NormalMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
+                            focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
+                            monsterSkill, bossSkill, expReward));
+                    line = br.readLine();
+                }
+                if (boss){
                     String[] values = line.split(",");
                     String name = values[0];
                     int hp = Integer.parseInt(values[1]);
@@ -156,6 +191,8 @@ public class FileManager {
                 int defenseModifier = Integer.parseInt(values[4]);
                 int fpModifier = Integer.parseInt(values[5]);
                 int fpPerTurnModifier = Integer.parseInt(values[6]);
+                equipment.add(new Equipment(itemName, itemType, hpModifier, attackModifier,
+                        defenseModifier, fpModifier, fpPerTurnModifier));
                 line = br.readLine();
             }
         }catch (IOException ex){
@@ -176,7 +213,8 @@ public class FileManager {
                     String playerClass = values[1];
                     int score = Integer.parseInt(values[2]);
                     int turnsTaken = Integer.parseInt(values[3]);
-                    leaderboards.add(new Leaderboard(playerName, playerClass, score, turnsTaken));
+                    int monstersDefeated = Integer.parseInt(values[4]);
+                    leaderboards.add(new Leaderboard(playerName, playerClass, score, turnsTaken, monstersDefeated));
                     line = br.readLine();
             }
         }catch (IOException ex){
@@ -184,144 +222,12 @@ public class FileManager {
         }
     }
 
-    private void saveHelper(String filePath, BufferedWriter bw){
-        if(filePath.equals(bestiaryFilePath.toString())){
-            try {
-                for (int i = 0; i < monsters.size(); i++) {
-                    bw.write(monsters.get(i).getCSV());
-                    if (i < monsters.size() - 1){
-                        bw.newLine();
-                    }
-                    else {
-                        bw.newLine();
-                        bw.write("%");
-                        bw.newLine();
-                    }
-                    for(BossMonster b : bosses){
-                        bw.write(b.getCSV());
-                        bw.newLine();
-                    }
-
-                }
-                bw.close();
-            }
-            catch (Exception ex){
-                System.out.println(ex);
-            }
-        }
-        if (filePath.equals(equipmentFilePath.toString())) {
-            try {
-                for (Equipment e : equipment){
-                    bw.write(e.getCSV());
-                    bw.newLine();
-                }
-                bw.close();
-            }
-            catch (Exception ex){
-                System.out.println(ex);
-            }
-        }
-        if ((filePath.equals(leaderboardFilePath.toString()))) {
-            try {
-                for(Leaderboard l : leaderboards){
-                    bw.write(l.getCSV());
-                }
-                bw.close();
-            }
-            catch (Exception ex){
-                System.out.println(ex);
-            }
-        }
-    }
-
-    private void loadHelper(String filePath, BufferedReader br){
-        if(filePath.equals(bestiaryFilePath.toString())) {
-            try {
-                String line = br.readLine();
-                boolean boss = false;
-                while (line != null) {
-                    if (line.equals("%")) {
-                        boss = true;
-                        line = br.readLine();
-                    }
-                    if (!boss){
-                        String[] values = line.split(",");
-                        String name = values[0];
-                        int hp = Integer.parseInt(values[1]);
-                        int baseAttack = Integer.parseInt(values[2]);
-                        int baseDefense = Integer.parseInt(values[3]);
-                        int baseFocusPoints = Integer.parseInt(values[4]);
-                        int focusPoints = Integer.parseInt(values[5]);
-                        int focusPointsPerTurn = Integer.parseInt(values[6]);
-                        int skillDamageVarianceBound = Integer.parseInt(values[7]);
-                        int skillDamageVarianceOrigin = Integer.parseInt(values[8]);
-                        String monsterSkill = values[9];
-                        String bossSkill = values[10];
-                        int expReward = Integer.parseInt(values[11]);
-                        monsters.add(new NormalMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
-                                focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
-                                monsterSkill, bossSkill, expReward));
-                        line = br.readLine();
-                    }else{
-                        String[] values = line.split(",");
-                        String name = values[0];
-                        int hp = Integer.parseInt(values[1]);
-                        int baseAttack = Integer.parseInt(values[2]);
-                        int baseDefense = Integer.parseInt(values[3]);
-                        int baseFocusPoints = Integer.parseInt(values[4]);
-                        int focusPoints = Integer.parseInt(values[5]);
-                        int focusPointsPerTurn = Integer.parseInt(values[6]);
-                        int skillDamageVarianceBound = Integer.parseInt(values[7]);
-                        int skillDamageVarianceOrigin = Integer.parseInt(values[8]);
-                        String monsterSkill = values[9];
-                        String bossSkill = values[10];
-                        int expReward = Integer.parseInt(values[11]);
-                        bosses.add(new BossMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
-                                focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
-                                monsterSkill, bossSkill, expReward));
-                        line = br.readLine();
-                    }
-
-                }
-            }catch (Exception ex) {
-                System.out.println(ex);
-            }
-
-        }
-        if(filePath.equals(equipmentFilePath.toString())) {
-            try {
-                String line = br.readLine();
-                boolean equipment = false;
-                while (line != null) {
-                    if (line.equals("%")) {
-                        equipment = true;
-                        line = br.readLine();
-                    }
-                    if (!equipment) {
-                        String[] values = line.split(",");
-                        String itemName = values[0];
-                        String itemType = values[1];
-                        String itemEffect = values[2];
-                        line = br.readLine();
-                    } else {
-                        String[] values = line.split(",");
-                        String itemName = values[0];
-                        String itemType = values[1];
-                        int attackModifier = Integer.parseInt(values[2]);
-                        line = br.readLine();
-                    }
-                }
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-        }
-        if (filePath.equals(leaderboardFilePath.toString())){
-            System.out.println("Loading leaderboard.");
-        }
-    }
-
     public ArrayList<NormalMonster> getMonsters() {
         return monsters;
+    }
+
+    public ArrayList<NormalMonster> getRiskierMonsters() {
+        return riskierMonsters;
     }
 
     public ArrayList<BossMonster> getBosses() {
@@ -334,6 +240,22 @@ public class FileManager {
 
     public ArrayList<Leaderboard> getLeaderboards() {
         return leaderboards;
+    }
+
+    public void setMonsterList(ArrayList<NormalMonster> monsters) {
+        this.monsters = monsters;
+    }
+
+    public void setBosses(ArrayList<BossMonster> bosses) {
+        this.bosses = bosses;
+    }
+
+    public void setEquipment(ArrayList<Equipment> equipment) {
+        this.equipment = equipment;
+    }
+
+    public void setLeaderboards(ArrayList<Leaderboard> leaderboards) {
+        this.leaderboards = leaderboards;
     }
 
     public void addToLeaderboardList(Leaderboard leaderboard){

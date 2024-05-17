@@ -23,6 +23,7 @@ public class PlayerBuilder {
     private int experienceGained = 0;
     private int level = 1;
     private int scoreTotal = 0;
+    private int monstersDefeated = 0;
 
     public PlayerBuilder setName(String name){
         this.name = name;
@@ -92,6 +93,10 @@ public class PlayerBuilder {
         this.scoreTotal = scoreTotal;
         return this;
     }
+    public PlayerBuilder setMonstersDefeated(int monstersDefeated){
+        this.monstersDefeated = monstersDefeated;
+        return  this;
+    }
 
     public PlayerCharacter build(){
         return new PlayerCharacter(name,
@@ -110,6 +115,7 @@ public class PlayerBuilder {
                 skillDamageVarianceOrigin,
                 experienceGained,
                 level,
-                scoreTotal);
+                scoreTotal,
+                monstersDefeated);
     }
 }

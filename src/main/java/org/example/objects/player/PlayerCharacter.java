@@ -8,13 +8,14 @@ import java.util.HashMap;
 
 public class PlayerCharacter extends Entity {
     private String playerClass;
-    private ArrayList<Equipment> absorbedEquipment;
+    private ArrayList<Equipment> absorbedEquipment = new ArrayList<>();
     private ArrayList<String> skillList;
     private ArrayList<String> basicSkillList;
     private int maxHp;
     private int experienceGained;
     private int level;
     private int scoreTotal;
+    private int monstersDefeated;
     private HashMap<Integer, Integer> levelBreakpoints = new HashMap<>();
     public PlayerCharacter(){
     }
@@ -35,7 +36,8 @@ public class PlayerCharacter extends Entity {
                            int skillDamageVarianceOrigin,
                            int experienceGained,
                            int level,
-                           int scoreTotal) {
+                           int scoreTotal,
+                           int monstersDefeated) {
         super(name, hp, attack, defense, focusPoints, baseFocusPoints,
                 focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin);
         this.maxHp = maxHp;
@@ -51,6 +53,7 @@ public class PlayerCharacter extends Entity {
         this.experienceGained = experienceGained;
         this.level = level;
         this.scoreTotal = scoreTotal;
+        this.monstersDefeated = monstersDefeated;
 
         levelBreakpoints.put(1, 100);
         levelBreakpoints.put(2, 250);
@@ -115,15 +118,33 @@ public class PlayerCharacter extends Entity {
                 hpRegained = passiveHPRegen;
             }
             System.out.println("You rest after the battle and regain " + hpRegained + " HP.\n");
-            setFocusPoints(getHp() + hpRegained);
+            setHp(getHp() + hpRegained);
         }
     }
     public void defenseIncrease(PlayerSkills playerSkills, String input){
         setDefense((int)playerSkills.getBasicSkillCommandHashMap().get(input).execute());
     }
 
-    public void listCurrentAttributes(){
+    public void listCurrentHPAndFP(){
         System.out.println("HP: " + getHp() + "     FP: " + getFocusPoints() + "\n");
+    }
+
+    public void listCurrentStats(){
+        System.out.println("HP: " + getHp() + "/" + getMaxHp() +  " | FP: " + getFocusPoints() + "/" + getBaseFocusPoints() + "\n" +
+                "Level: " + getLevel() + " | EXP Total: " + getExperienceGained() + "\n" +
+                "Attack: " + getAttack() + " | Defense: " + getDefense() + "\n" +
+                "FP Regen: " + getBaseFocusPoints() + " | Monsters Defeated: " + getMonstersDefeated() + "\n" +
+                "Current Score: " + getScoreTotal() + "\n" +
+                "Equipment: " + "\n");
+
+        for (int i = 0; i < absorbedEquipment.size(); i++){
+            if (i == absorbedEquipment.size() - 1){
+                System.out.println(absorbedEquipment.get(i).getItemName() + "\n");
+            }
+            else{
+                System.out.println(absorbedEquipment.get(i).getItemName() + ", ");
+            }
+        }
     }
 
     public int getMaxHp() {
@@ -189,6 +210,11 @@ public class PlayerCharacter extends Entity {
         this.scoreTotal = scoreTotal;
     }
 
+    public int getMonstersDefeated() {
+        return monstersDefeated;
+    }
 
-
+    public void setMonstersDefeated(int monstersDefeated) {
+        this.monstersDefeated = monstersDefeated;
+    }
 }
