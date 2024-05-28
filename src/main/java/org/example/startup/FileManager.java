@@ -1,6 +1,8 @@
 package org.example.startup;
 
 
+import org.example.factories.BossFactory;
+import org.example.factories.MonsterFactory;
 import org.example.objects.Leaderboard;
 import org.example.objects.items.Equipment;
 
@@ -16,6 +18,8 @@ public class FileManager {
     private ArrayList<BossMonster> bosses = new ArrayList<>();
     private ArrayList<Equipment> equipment = new ArrayList<>();
     private ArrayList<Leaderboard> leaderboards = new ArrayList<>();
+    private MonsterFactory normalFactory = new MonsterFactory();
+    private BossFactory bossFactory = new BossFactory();
     private static File saved_files = new File("src/main/resources/saved_files");
     public static File bestiaryFilePath = new File("src/main/resources/saved_files/bestiary");
     public static File equipmentFilePath = new File("src/main/resources/saved_files/equipment");
@@ -128,8 +132,9 @@ public class FileManager {
                     String monsterSkill = values[9];
                     String bossSkill = values[10];
                     int expReward = Integer.parseInt(values[11]);
-                    monsters.add(new NormalMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
-                            focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
+                    monsters.add(normalFactory.createMonster(name, hp, baseAttack,
+                            baseDefense, baseFocusPoints, focusPoints, focusPointsPerTurn,
+                            skillDamageVarianceBound, skillDamageVarianceOrigin,
                             monsterSkill, bossSkill, expReward));
                     line = br.readLine();
                 }
@@ -147,8 +152,9 @@ public class FileManager {
                     String monsterSkill = values[9];
                     String bossSkill = values[10];
                     int expReward = Integer.parseInt(values[11]);
-                    riskierMonsters.add(new NormalMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
-                            focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
+                    riskierMonsters.add(normalFactory.createMonster(name, hp, baseAttack,
+                            baseDefense, baseFocusPoints, focusPoints, focusPointsPerTurn,
+                            skillDamageVarianceBound, skillDamageVarianceOrigin,
                             monsterSkill, bossSkill, expReward));
                     line = br.readLine();
                 }
@@ -166,8 +172,9 @@ public class FileManager {
                     String monsterSkill = values[9];
                     String bossSkill = values[10];
                     int expReward = Integer.parseInt(values[11]);
-                    bosses.add(new BossMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
-                            focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
+                    bosses.add(bossFactory.createMonster(name, hp, baseAttack, baseDefense,
+                            baseFocusPoints, focusPoints, focusPointsPerTurn,
+                            skillDamageVarianceBound, skillDamageVarianceOrigin,
                             monsterSkill, bossSkill, expReward));
                     line = br.readLine();
                 }

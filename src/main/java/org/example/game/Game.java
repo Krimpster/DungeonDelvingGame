@@ -2,6 +2,8 @@ package org.example.game;
 
 import org.example.builders.PlayerBuilder;
 import org.example.builders.PlayerDirector;
+import org.example.factories.BossFactory;
+import org.example.factories.MonsterFactory;
 import org.example.game.sortingalgorithms.InsertionSort;
 import org.example.game.sortingalgorithms.NameInsertionSort;
 import org.example.game.sortingalgorithms.QuickSort;
@@ -36,6 +38,8 @@ public class Game {
     private InputGetter inputGetter = new InputGetter();
     private PlayerBuilder playerBuilder = new PlayerBuilder();
     private PlayerDirector playerDirector = new PlayerDirector();
+    private MonsterFactory normalFactory = new MonsterFactory();
+    private BossFactory bossFactory = new BossFactory();
     private PlayerCharacter playerCharacter;
     private FileManager fileManager = new FileManager();
     private ArrayList<NormalMonster> monsterList = new ArrayList<>();
@@ -242,8 +246,8 @@ public class Game {
         String monsterSkill = inputGetter.getSkillStringInput("\nWhat will it's skill be? You can only choose from these:\n");
         String bossSkill = "none";
         int expReward = inputGetter.getIntInput("\nWhat will it's EXP reward be? ");
-        return new NormalMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
-                focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
+        return normalFactory.createMonster(name, hp, baseAttack, baseDefense, baseFocusPoints,
+                focusPoints, focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
                 monsterSkill, bossSkill, expReward);
     }
 
@@ -260,8 +264,8 @@ public class Game {
         String monsterSkill = inputGetter.getSkillStringInput("\nWhat will it's first skill be? You can only choose from these:\n");
         String bossSkill = inputGetter.getSkillStringInput("\nWhat will it's second skill be? You can only choose from these:\n");
         int expReward = inputGetter.getIntInput("\nWhat will it's EXP reward be? ");
-        return new BossMonster(name, hp, baseAttack, baseDefense, baseFocusPoints, focusPoints,
-                focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
+        return bossFactory.createMonster(name, hp, baseAttack, baseDefense, baseFocusPoints,
+                focusPoints, focusPointsPerTurn, skillDamageVarianceBound, skillDamageVarianceOrigin,
                 monsterSkill, bossSkill, expReward);
     }
 

@@ -6,7 +6,7 @@ import org.example.objects.monsters.NormalMonster;
 
 public class MonsterFactory implements IFactoryMonster {
     @Override
-    public Monster createMonster(String name, int hp, int baseAttack, int baseDefense,
+    public NormalMonster createMonster(String name, int hp, int baseAttack, int baseDefense,
                                  int baseFocusPoints, int focusPoints, int focusPointsPerTurn,
                                  int skillDamageVarianceBound, int skillDamageVarianceOrigin, String monsterSkill,
                                  String bossSkill, int expReward){
